@@ -13,20 +13,21 @@ INSTA_USERNAME = os.getenv('INSTA_USER')
 INSTA_PASSWORD = os.getenv('INSTA_PW')
 
 # TIMES
-#ROUNDS_INTERVAL = 7.5 * 60 * 60  # interval between rounds, seconds
-#DROP_WINDOW = 30 * 60  # drop window before each round_start, seconds
-#ROUND_TIME = 1 * 30 * 60  # round_start time, seconds
-#DROP_ANNOUNCE = 1 * 60 * 60 # drop_announcement time, seconds
-
-# TESTING TIMES
-ROUNDS_INTERVAL = 1 * 25 * 60  # interval between rounds, seconds TESTING
-DROP_WINDOW = 10 * 60  # drop window before each round_start, seconds TESTING
-ROUND_TIME = 1 * 20 * 60  # round_start time, seconds TESTING
-DROP_ANNOUNCE = 10 * 60 # drop_announcement time, seconds TESTING
+ROUNDS_INTERVAL = 23.5 * 60 * 60  # interval between rounds, seconds
+DROP_WINDOW = 30 * 60  # drop window before each round_start, seconds
+ROUND_TIME = 1 * 30 * 60  # round_start time, seconds
+DROP_ANNOUNCE = 1 * 60 * 60 # drop_announcement time, seconds
 DROP_ENDS_SOON = DROP_WINDOW * 5 // 6
 
-#BAD_USER_BAN_TIME = 360 * 60 * 60 # user ban time after bad behavior
-BAD_USER_BAN_TIME = 1 * 60 * 60 # user ban time after bad behavior TESTING
+# TESTING TIMES
+# ROUNDS_INTERVAL = 1 * 25 * 60  # interval between rounds, seconds TESTING
+# DROP_WINDOW = 10 * 60  # drop window before each round_start, seconds TESTING
+# ROUND_TIME = 1 * 20 * 60  # round_start time, seconds TESTING
+# DROP_ANNOUNCE = 10 * 60 # drop_announcement time, seconds TESTING
+# DROP_ENDS_SOON = DROP_WINDOW * 5 // 6
+
+BAD_USER_BAN_TIME = 15 * 24 * 60 * 60 # user ban time after bad behavior
+#BAD_USER_BAN_TIME = 1 * 60 * 60 # user ban time after bad behavior TESTING
 
 # PATH
 CONFIG_NAME = 'config.py'  # this file's name
