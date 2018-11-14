@@ -22,7 +22,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 sleep_time = 0.25
-insta_user_pattern = re.compile(r'^([hH]ttp)?s?(\://)?([wW]ww\.)?[iI]nstagram\.com/[^/][^p/].*?/?$')
+insta_user_pattern = re.compile(r'^([hH]ttp)?s?(://)?([wW]ww.)?[iI]nstagram.com/[^/][^p/].*?/?$')
 
 times = {}  # {group_tg_id: closest round_start start timestamp}
 
@@ -93,6 +93,7 @@ def usernames_from_links(arr):
     for i in arr:
         if not i:
             continue
+        #i = re.search(r'nstagram.com/*+/?', i)
         if i[-1] == '/':
             i = i[:-1]
         username = i.rsplit('/', maxsplit=1)[-1]
@@ -300,7 +301,7 @@ def new_group_setup(bot, update, args, job_queue):
                 {T_ROUND['FIELDS']['GROUP_ID']}) VALUES (?, ?)'''
                 cursor.execute(query, (next_round_starts, update.message.chat_id))  # creates new round_start
                 conn.commit()
-                bot.sendMessage(update.message.chat.id, texts.SETUP_SUCCESS)
+                #bot.sendMessage(update.message.chat.id, texts.SETUP_SUCCESS)
                 logger.info(f'New round set to {args}')
 
                 plan_all_round_jobs(job_queue)
@@ -385,7 +386,7 @@ def final_check(bot, job):
     else:
         lst = [x for x in get_bad_users(pidorases)]
         list_to_send = '\n'.join(lst)
-        bot.sendMessage(chatid, texts.BAD_USERS + list_to_send + texts.BAD_BEHAVIOR_INFO)
+        bot.sendMessage(chatid, texts.BAD_USERS + list_to_send + BAD_BEHAVIOR_INFO)
 
     goods = list(set(nicks) - set(pidorases))
     check_for_pidority(goods, pidorases, chatid, bot)
