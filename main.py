@@ -94,8 +94,8 @@ def usernames_from_links(arr):
         if not i:
             continue
         #i = re.search(r'nstagram.com/*+/?', i)
-        if i.find("?") >= 1:
-            i = i.rsplit('?', maxsplit=1)[-1]
+        # if i.find("?") >= 1:
+        #     i = i.rsplit('?', maxsplit=1)[-1]
         if i[-1] == '/':
             i = i[:-1]
         username = i.rsplit('/', maxsplit=1)[-1]
