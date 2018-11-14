@@ -388,7 +388,7 @@ def final_check(bot, job):
     else:
         lst = [x for x in get_bad_users(pidorases)]
         list_to_send = '\n'.join(lst)
-        bot.sendMessage(chatid, texts.BAD_USERS + list_to_send + BAD_BEHAVIOR_INFO)
+        bot.sendMessage(chatid, texts.BAD_USERS + list_to_send + texts.BAD_BEHAVIOR_INFO)
 
     goods = list(set(nicks) - set(pidorases))
     check_for_pidority(goods, pidorases, chatid, bot)
