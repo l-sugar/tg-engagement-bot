@@ -96,10 +96,9 @@ def usernames_from_links(arr):
         #i = re.search(r'nstagram.com/*+/?', i)
         if i.find("?") >= 1:
             i = i.rsplit('?', maxsplit=1)[-1]
-        else:
-            if i[-1] == '/':
-                i = i[:-1]
-            username = i.rsplit('/', maxsplit=1)[-1]
+        if i[-1] == '/':
+            i = i[:-1]
+        username = i.rsplit('/', maxsplit=1)[-1]
         res.append(username)
     return res
 
