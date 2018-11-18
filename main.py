@@ -6,7 +6,6 @@ import sqlite3
 from datetime import datetime, timedelta
 from threading import Thread
 from time import sleep
-# from emoji import emojize
 
 from InstagramAPI import InstagramAPI
 from telegram.ext import CommandHandler, MessageHandler, Updater, Filters
@@ -353,24 +352,25 @@ def check_instagram(api, lst):
     result = gather(api, lst)
     approved = check(result, lst)
     res = list(set(lst) - set(approved))
+    logger.info(res)
     return res
 
 
-# @async1
-# def check45(bot, job):
-#     logger.warning('45 mins check')
-#     chatid = job.context[0]
-#     nicks = job.context[1]
-#
-#     pidorases = check_instagram(api, nicks)
-#     if not pidorases:
-#         logging.info('All users had liked&commented each other')
-#     else:
-#         logging.info(f"These users did not complete the requirements: {pidorases}")
-#         lst = [x for x in get_bad_users(pidorases)]
-#         list_to_send = '\n'.join(lst)
-#         logger.info(f'These users did not complete the requirements: {lst}')
-#         bot.sendMessage(chatid, texts.BAD_CONDITIONS + list_to_send)
+@async1
+def check45(bot, job):
+    logger.warning('45 mins check')
+    chatid = job.context[0]
+    nicks = job.context[1]
+
+    pidorases = check_instagram(api, nicks)
+    if not pidorases:
+        logging.info('check45: All users had liked&commented each other')
+    else:
+        logging.info(f"These users did not complete the requirements: {pidorases}")
+        lst = [x for x in get_bad_users(pidorases)]
+        list_to_send = '\n'.join(lst)
+        logger.info(f'These users did not complete the requirements: {lst}')
+        bot.sendMessage(chatid, texts.BAD_CONDITIONS + list_to_send)
 
 
 def final_check(bot, job):
@@ -541,8 +541,8 @@ def round_start(bot, job):
         logger.info(f'Links for this round ({job.context[0]}): {links_list}')
         bot.sendMessage(job.context[0], links_list, disable_web_page_preview=True)
         bot.sendMessage(job.context[0], texts.ROUND_START_RULES)
-        # job.context[1].run_once(check45, (ROUND_TIME // 6) * 5, context=[job.context[0], nicknames],
-        #                         name=f'45min alert for {job.context[0]}')
+        job.context[1].run_once(check45, (ROUND_TIME // 4) * 3, context=[job.context[0], nicknames],
+                                name=f'45min alert for {job.context[0]}')
         job.context[1].run_once(final_check, ROUND_TIME, context=[job.context[0], nicknames, job.context[1]],
                                 name=f'final checking for {job.context[0]}')
         logger.info(f'Checkings planned: {job.context[1].jobs()}')
