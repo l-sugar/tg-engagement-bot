@@ -95,7 +95,7 @@ def usernames_from_links(arr):
         #i = re.search(r'nstagram.com/*+/?', i)
         # if i.find("?") >= 1:
         #     i = i.rsplit('?', maxsplit=1)[-1]
-        match = re.search('nstagram.com/[^/]+', i)
+        match = re.search(r'nstagram.com/[^/?]+', i)
         # if i[-1] == '/':
         #     i = i[:-1]
         username = match.group().rsplit('/', maxsplit=1)[-1]
@@ -643,6 +643,9 @@ def get_next_round_time(bot, update):
     bot.sendMessage(update.message.chat_id, message)
     logger.info(f'Round time sent: {t}')
 
+# @async1
+# def check_engagement(bot, update, args, job_queue):
+
 
 def setup():
     logging.basicConfig(level=logging.WARNING)
@@ -655,6 +658,7 @@ def setup():
     dp.add_handler(CommandHandler("setup", new_group_setup, pass_args=True, pass_job_queue=True))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("nextround", get_next_round_time))
+    # dp.add_handler(CommandHandler("check", check_engagement, pass_args=True, pass_job_queue=True))
     dp.add_handler(MessageHandler(Filters.text, echo))
     #dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_user_welcome))
     dp.add_error_handler(error)
