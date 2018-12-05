@@ -35,7 +35,8 @@ CONFIG_NAME = 'config.py'  # this file's name
 FOLDER_PATH = '/'  # this folder's full path
 
 # DATABASE SETTINGS
-DB_NAME = 'bot_base.db'  # full database's path
+DATABASE_URL = os.getenv('DATABASE_URL')
+
 T_ROUND = {'NAME': 'round',
            'FIELDS':
                {
@@ -45,7 +46,7 @@ T_ROUND = {'NAME': 'round',
                    'IN_PROGRESS': 'in_progress'
                }
            }
-T_USER = {'NAME': 'user',
+T_USER = {'NAME': 'participant',
           'FIELDS':
               {
                   'TG_NAME': 'tg_name',
@@ -53,7 +54,6 @@ T_USER = {'NAME': 'user',
                   'IS_BANNED': 'is_banned',
                   'BAN_WARNS': 'ban_warnings',
                   'USER_ID': 'user_id',
-                  'IS_P': 'is_pidoras',
                   'FULL_NAME': 'full_name'
               }
           }
