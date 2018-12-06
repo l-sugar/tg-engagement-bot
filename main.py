@@ -565,7 +565,7 @@ def plan_all_round_jobs(job_queue):
         t = get_next_start_time(group[0])
         if t:
             global times
-            if times[group[0]]:
+            if group[0] in times:
                 if times[group[0]] == t:
                     continue
 
