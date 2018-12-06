@@ -664,9 +664,10 @@ def get_links_to_check(api, insta_handle, participating_insta_links):
                 likers_handles.append(str(i.get('username', "")))
             if not insta_handle in likers_handles:
                 likers_missing.append(user)
-            user_comments = getComments(api, post_id)
-            if not insta_handle in user_comments:
-                comment_missing.append(user)
+            else:
+                user_comments = getComments(api, post_id)
+                if not insta_handle in user_comments:
+                    comment_missing.append(user)
             for i in likers_missing:
                 list.append(str(i))
             for j in comment_missing:
