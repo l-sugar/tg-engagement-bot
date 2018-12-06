@@ -564,23 +564,18 @@ def plan_all_round_jobs(job_queue):
         # print(group[0])
         t = get_next_start_time(group[0])
         if t:
-            dt = datetime.fromtimestamp(t)
-            job_queue.run_once(round_start, dt, context=[group[0], job_queue], name=f'round_start {group[0]}')
-            logger.info(f'Jobs for group {group[0]} added at {dt}')
-            jobs = job_queue.jobs()
-            for i in jobs:
-                logger.warning(f'Job planned: {i.name}')
+            global times
+            if times[group[0]] == t:
+                continue
 
+            dt = datetime.fromtimestamp(t)
             drop_window_start = dt - timedelta(seconds=DROP_WINDOW)
             drop_announce_time = dt - timedelta(seconds=(DROP_WINDOW + DROP_ANNOUNCE))
-            job_queue.run_once(drop_soon_announce, drop_announce_time, context=group[0], name=f'Drop announcement for group {group[0]}')
-            job_queue.run_once(drop_window, drop_window_start, context=[group[0], job_queue],
-                               name=f'Drop window for group {group[0]}')
-            logger.info(f'Jobs for group {group[0]} added at {drop_window_start}')
-            jobs = job_queue.jobs()
-            for i in jobs:
-                logger.warning(f'Job planned: {i.name}')
 
+            job_queue.run_once(round_start, dt, context=[group[0], job_queue], name=f'round_start {group[0]}')
+            job_queue.run_once(drop_soon_announce, drop_announce_time, context=group[0], name=f'Drop announcement for group {group[0]}')
+            job_queue.run_once(drop_window, drop_window_start, context=[group[0], job_queue], name=f'Drop window for group {group[0]}')
+            logger.info(f'Next drop & round for group {group[0]} added at {drop_window_start}')
             add_to_times(group[0])
             logger.info(f'Queue: {job_queue.jobs()}')
 
