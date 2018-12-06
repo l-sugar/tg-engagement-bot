@@ -314,7 +314,7 @@ def new_group_setup(bot, update, args, job_queue):
                 plan_all_round_jobs(job_queue)
                 jobs = job_queue.jobs()
                 for i in jobs:
-                    logger.warning(f'Job planned: {i.name}')
+                    logger.warning(f'Job planned: {i.name} at {i.name.next_t}')
             else:
                 bot.sendMessage(update.message.chat.id, texts.ROUND_ALREADY_SET)
                 logger.info("There's a round for this group in the future")
@@ -341,7 +341,7 @@ def drop_window(bot, job):
     job_queue.run_once(drop_alert, (DROP_ENDS_SOON), context=chatid, name='plan drop_alert')
     jobs = job_queue.jobs()
     for i in jobs:
-        logger.warning(f'Job planned: {i.name}')
+        logger.warning(f'Job planned: {i.name} at {i.name.next_t}')
 
 
 @async1
@@ -478,7 +478,7 @@ def end_and_plan_next(bot, cont):
     logger.info('Round has ended')
     jobs = job_queue.jobs()
     for i in jobs:
-        logger.warning(f'Job planned: {i.name}')
+        logger.warning(f'Job planned: {i.name} at {i.name.next_t}')
 
     next_start_time = (datetime.now() + timedelta(seconds=ROUNDS_INTERVAL)).timestamp()
 
@@ -534,7 +534,7 @@ def round_start(bot, job):
         logger.info(f'Checkings planned: {job.context[1].jobs()}')
         jobs = job.context[1].jobs()
         for i in jobs:
-            logger.warning(f'Job planned: {i.name}')
+            logger.warning(f'Job planned: {i.name} at {i.name.next_t}')
 
 
 def get_round_links(time):
@@ -569,7 +569,7 @@ def plan_all_round_jobs(job_queue):
             logger.info(f'Jobs for group {group[0]} added at {dt}')
             jobs = job_queue.jobs()
             for i in jobs:
-                logger.warning(f'Job planned: {i.name}')
+                logger.warning(f'Job planned: {i.name} at {i.name.next_t}')
 
             drop_window_start = dt - timedelta(seconds=DROP_WINDOW)
             drop_announce_time = dt - timedelta(seconds=(DROP_WINDOW + DROP_ANNOUNCE))
@@ -579,7 +579,7 @@ def plan_all_round_jobs(job_queue):
             logger.info(f'Jobs for group {group[0]} added at {drop_window_start}')
             jobs = job_queue.jobs()
             for i in jobs:
-                logger.warning(f'Job planned: {i.name}')
+                logger.warning(f'Job planned: {i.name} at {i.name.next_t}')
 
             add_to_times(group[0])
             logger.info(f'Queue: {job_queue.jobs()}')
