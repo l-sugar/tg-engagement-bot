@@ -77,12 +77,12 @@ def echo(bot, update):
         logger.info(f'start: {start}, now: {now}, end: {end}')
         if start < now < end:
             if update.message.from_user.username:
-                add_to_next_round(update.message.from_user.username, update.message.chat.id, text,
-                                  update.message.from_user.id, update.message.from_user.full_name)
+                tg_name = update.message.from_user.username
             else:
-                add_to_next_round(NULL, update.message.chat.id, text,
-                                  update.message.from_user.id, update.message.from_user.full_name)
+                tg_name = None
             #bot.sendMessage(update.message.chat_id, texts.LINK_ADDED)
+            add_to_next_round(tg_name, update.message.chat.id, text,
+                              update.message.from_user.id, update.message.from_user.full_name)
 
         else:
             bot.delete_message(chat_id=update.message.chat.id, message_id=update.message.message_id)
@@ -693,11 +693,11 @@ def check_engagement(bot, update, job_queue):
 
         cursor.execute(f'''SELECT {T_USER['FIELDS']['INSTA_LINK']} FROM {T_USER['NAME']} \
         WHERE {T_USER['FIELDS']['USER_ID']}={update.message.from_user.id}''')
-        data = cursor.fetchone()[0]
+        data = cursor.fetchone()
 
         if data:
 
-            insta_handle = handle_from_link(str(data))
+            insta_handle = handle_from_link(str(data[0]))
 
             logger.info(f'Received /check command from {insta_handle}')
             cursor.execute(f'''SELECT {T_USER['FIELDS']['TG_NAME']} FROM {T_USER['NAME']} \
