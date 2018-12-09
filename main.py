@@ -705,7 +705,7 @@ def check_engagement(bot, update, job_queue):
             handles = usernames_from_links(participating_insta_links)
 
             logger.info(f'{insta_handle} started manual check')
-            list = []
+            output_list = []
             likers_missing = []
             comment_missing = []
 
@@ -722,33 +722,35 @@ def check_engagement(bot, update, job_queue):
                     likers_handles = []
                     for i in api.LastJson['users']:
                         likers_handles.append(str(i.get('username', "")))
-                    if not insta_handle in likers_handles:
+                    if insta_handle not in likers_handles:
                         likers_missing.append(user)
                     else:
                         user_comments = getComments(api, post_id)
-                        if not insta_handle in user_comments:
+                        if insta_handle not in user_comments:
                             comment_missing.append(user)
                     for i in likers_missing:
-                        list.append(str(i))
+                        if i not in output_list:
+                            output_list.append(str(i))
                     for j in comment_missing:
-                        list.append(str(j))
+                        if j not in output_list:
+                            output_list.append(str(j))
                     sleep(1.75)
 
             logger.info(f'{insta_handle} LIKES MISSING: {likers_missing}')
             logger.info(f'{insta_handle} COMMENTS MISSING: {comment_missing}')
 
-            logger.info(f'{insta_handle} CHECK_RESULT: {list}')
+            logger.info(f'{insta_handle} CHECK_RESULT: {output_list}')
 
 
-            if list:
-                if len(list) > 1:
-                    list_to_check = '\nwww.instagram.com/' + '\nwww.instagram.com/'.join(list)
+            if output_list:
+                if len(output_list) > 1:
+                    list_to_check = '\nwww.instagram.com/' + '\nwww.instagram.com/'.join(output_list)
                 else:
-                    list_to_check = '\nwww.instagram.com/' + list[0]
+                    list_to_check = '\nwww.instagram.com/' + output_list[0]
 
                 check_message = name + '\ncheck these users:\n' + list_to_check
 
-                logger_check_list = ' '.join(list)
+                logger_check_list = ' '.join(output_list)
                 logger.info(f'{insta_handle} engagements missing: {logger_check_list}')
 
             else:
