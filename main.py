@@ -90,13 +90,13 @@ def usernames_from_links(arr):
         # if i[-1] == '/':
         #     i = i[:-1]
         username = match.group().rsplit('/', maxsplit=1)[-1]
-        res.append(username)
+        res.append(username.lower())
     return res
 
 def handle_from_link(link):
     match = re.search('nstagram.com/[^/?]+', link)
     username = match.group().rsplit('/', maxsplit=1)[-1]
-    return username
+    return username.lower()
 
 # @async1
 def add_to_next_round(tg_name, chat_id, insta_link, userid, fullname):
