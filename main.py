@@ -3,7 +3,7 @@ import logging
 import re
 import psycopg2
 import psycopg2.extras
-import tenacity
+from tenacity import *
 
 from datetime import datetime, timedelta
 from threading import Thread
