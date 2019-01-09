@@ -7,6 +7,7 @@ import psycopg2.extras
 from datetime import datetime, timedelta
 from threading import Thread
 from time import sleep
+from tenacity import *
 
 from InstagramAPI import InstagramAPI
 from telegram.ext import CommandHandler, MessageHandler, Updater, Filters
@@ -50,7 +51,7 @@ def echo(bot, update):
             logger.info(f'{update.message.chat_id}: {update.message.from_user.id}s (admin) message has been passed')
         else:
             bot.delete_message(chat_id=update.message.chat.id, message_id=update.message.message_id)
-            logger.info(f'{update.message.chat_id}: Message has been deleted: {text}')
+            logger.info(f'{update.message.chat_id}: Message has been deleted: {update.message.from_user.full_name} : {text}')
             bot.sendMessage(update.message.chat.id, texts.MESSAGE_DELETED + CHAT_GROUP, disable_web_page_preview=True)
     else:
         if update.message.chat_id not in times:
@@ -75,7 +76,7 @@ def echo(bot, update):
 
         else:
             bot.delete_message(chat_id=update.message.chat.id, message_id=update.message.message_id)
-            logger.info(f'{update.message.chat_id}: Wrong time. Message has been deleted: {text}')
+            logger.info(f'{update.message.chat_id}: Wrong time. Message has been deleted: {update.message.from_user.full_name} : {text}')
 
 
 def usernames_from_links(arr):
@@ -738,27 +739,33 @@ def check_engagement(bot, update, job_queue):
                     if user == insta_handle:
                         continue
                     else:
-                        logger.warning(f'{chat_id}: {insta_handle} : {user} insta-check started')
-                        api.searchUsername(user)
-                        id = str(api.LastJson.get('user', "").get("pk", ""))
-                        api.getUserFeed(id)
-                        post_id = str(api.LastJson.get('items', "")[0].get("pk", ""))
-                        api.getMediaLikers(post_id)
-                        likers_handles = []
-                        for i in api.LastJson['users']:
-                            likers_handles.append(str(i.get('username', "")))
-                        if insta_handle not in likers_handles:
-                            likers_missing.append(user)
-                        else:
-                            user_comments = getComments(api, post_id)
-                            if insta_handle not in user_comments:
-                                comment_missing.append(user)
-                        for i in likers_missing:
-                            if i not in output_list:
-                                output_list.append(str(i))
-                        for j in comment_missing:
-                            if j not in output_list:
-                                output_list.append(str(j))
+                        @retry(stop=stop_after_attempt(3), (wait=wait_fixed(1) + wait_random(0, 1.5)))
+                        def get_pic_engagements(user):
+                            try:
+                                logger.warning(f'{chat_id}: {insta_handle} : {user} insta-check started')
+                                api.searchUsername(user)
+                                id = str(api.LastJson.get('user', "").get("pk", ""))
+                                api.getUserFeed(id)
+                                post_id = str(api.LastJson.get('items', "")[0].get("pk", ""))
+                                api.getMediaLikers(post_id)
+                                likers_handles = []
+                                for i in api.LastJson['users']:
+                                    likers_handles.append(str(i.get('username', "")))
+                                if insta_handle not in likers_handles:
+                                    likers_missing.append(user)
+                                else:
+                                    user_comments = getComments(api, post_id)
+                                    if insta_handle not in user_comments:
+                                        comment_missing.append(user)
+                                for i in likers_missing:
+                                    if i not in output_list:
+                                        output_list.append(str(i))
+                                for j in comment_missing:
+                                    if j not in output_list:
+                                        output_list.append(str(j))
+                            except Exception as e:
+                                logger.warning(e)
+                                raise
                         sleep(1.75)
 
                 logger.info(f'{chat_id}: {insta_handle} LIKES MISSING: {likers_missing}')
