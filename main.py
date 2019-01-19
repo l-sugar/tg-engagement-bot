@@ -676,7 +676,7 @@ def delete_check_message(bot, job):
 
 
 
-@async1
+
 def check_engagement(bot, update, job_queue):
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = conn.cursor()
@@ -739,7 +739,7 @@ def check_engagement(bot, update, job_queue):
                 likers_missing = []
                 comment_missing = []
 
-                @retry(stop=stop_after_attempt(3), wait=(wait_fixed(1) + wait_random(0, 1.5)))
+                @retry(stop=stop_after_attempt(5), wait=(wait_fixed(10) + wait_random(5, 10)))
                 def get_pic_engagements(user):
                     try:
                         logger.warning(f'{chat_id}: {insta_handle} : {user} insta-check started')
@@ -877,7 +877,7 @@ if __name__ == '__main__':
     sleep(1)
     api.login()
     sleep(1)
-    logger.info('Instagram account(s): ready')
+    logger.info(f'Instagram account(s): ready')
 
     # TODO если надо будет обновлять конфиг в лайве
     # wm = pyinotify.WatchManager()
