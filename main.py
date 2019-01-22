@@ -221,7 +221,7 @@ def gather(api, userList):
         return None
 
 
-def check(res, users):
+def check(res, users): # users == [name1, name2, name]
     approved = []
     try:
         for _, i in enumerate(users):
