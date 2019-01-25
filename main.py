@@ -173,6 +173,7 @@ def getComments(api, post_id):
             if next_max_id is True:
                 next_max_id = ''
             _ = api.getMediaComments(post_id, max_id=next_max_id)
+            logger.info(f'found comments for post {post_id} with status =' + str(api.LastJson.get('status', '')))
             for i in api.LastJson['comments']:
                 try:
                     commentator = i.get('user', "").get('username', "")
@@ -202,9 +203,12 @@ def gather(api, userList): # userList == [name1, name2, name3, ...]
                 tmp = []
                 api.searchUsername(user)
                 id = str(api.LastJson.get('user', "").get("pk", ""))
+                logger.info(f'found user {user} with status =' + str(api.LastJson.get('status', '')))
                 api.getUserFeed(id)
                 post_id = str(api.LastJson.get('items', "")[0].get("pk", ""))
+                logger.info(f'found last post of {user} with status =' + str(api.LastJson.get('status', '')))
                 api.getMediaLikers(post_id)
+                logger.info(f'found likers of last post of {user} with status =' + str(api.LastJson.get('status', '')))
                 for i in api.LastJson['users']:
                     likers.append(i.get('username', ""))
                 user_comments = getComments(api, post_id)
@@ -770,8 +774,10 @@ def check_engagement(bot, update, job_queue):
                         logger.warning(f'{chat_id}: {insta_handle} : {user} insta-check started')
                         api.searchUsername(user)
                         id = str(api.LastJson.get('user', "").get("pk", ""))
+                        logger.info(f'found last user {id} with status =' + str(api.LastJson.get('status', '')))
                         api.getUserFeed(id)
                         post_id = str(api.LastJson.get('items', "")[0].get("pk", ""))
+                        logger.info(f'found last users post {post_id} with status =' + str(api.LastJson.get('status', '')))
                         api.getMediaLikers(post_id)
                         likers_handles = []
                         for i in api.LastJson['users']:
