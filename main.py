@@ -166,8 +166,7 @@ def add_to_times(chat_id):
     return None
 
 @retry(stop=stop_after_attempt(5), wait=(wait_fixed(5) + wait_random(0, 1.5)))
-def getComments(post_id):
-    api = next(apis)
+def getComments(api, post_id):
     next_max_id = True
     comments = []
     while next_max_id:
@@ -175,7 +174,6 @@ def getComments(post_id):
             if next_max_id is True:
                 next_max_id = ''
             _ = api.getMediaComments(post_id, max_id=next_max_id)
-            logger.info(f'found comments for post {post_id} with status =' + str(api.LastJson.get('status', '')))
             for i in api.LastJson['comments']:
                 try:
                     commentator = i.get('user', "").get('username', "")
@@ -194,8 +192,7 @@ def getComments(post_id):
 
 
 @retry(stop=stop_after_attempt(5), wait=(wait_fixed(5) + wait_random(0, 1.5)))
-def gather(userList): # userList == [name1, name2, name3, ...]
-    api = next(apis)
+def gather(api, userList): # userList == [name1, name2, name3, ...]
     engagements = []
     # engagements = [engagements[tmp[likers][user_comments]]]
     # access spec liker: global_mas[0][0][0]
@@ -206,10 +203,8 @@ def gather(userList): # userList == [name1, name2, name3, ...]
                 tmp = []
                 api.searchUsername(user)
                 id = str(api.LastJson.get('user', "").get("pk", ""))
-                logger.info(f'found user {user} with status =' + str(api.LastJson.get('status', '')))
                 api.getUserFeed(id)
                 post_id = str(api.LastJson.get('items', "")[0].get("pk", ""))
-                logger.info(f'found last post of {user} with status =' + str(api.LastJson.get('status', '')))
                 api.getMediaLikers(post_id)
                 logger.info(f'found likers of last post of {user} with status =' + str(api.LastJson.get('status', '')))
                 for i in api.LastJson['users']:
@@ -378,8 +373,9 @@ def drop_soon_announce(bot, job):
     logger.warning(f'Drop announcement sent for group {chat_id}')
 
 def check_instagram(lst):
+    api = next(apis)
     logger.info('Checking Instagram...')
-    result = gather(lst)
+    result = gather(api, lst)
     approved, missing_engagements = check(result, lst)
     res = list(set(lst) - set(approved))
     logger.info(res)
@@ -709,7 +705,7 @@ def delete_check_message(bot, job):
 
 
 
-
+@async1
 def check_engagement(bot, update, job_queue):
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = conn.cursor()
@@ -779,10 +775,9 @@ def check_engagement(bot, update, job_queue):
                         logger.warning(f'{chat_id}: {insta_handle} : {user} insta-check started')
                         api.searchUsername(user)
                         id = str(api.LastJson.get('user', "").get("pk", ""))
-                        logger.info(f'found last user {id} with status =' + str(api.LastJson.get('status', '')))
                         api.getUserFeed(id)
                         post_id = str(api.LastJson.get('items', "")[0].get("pk", ""))
-                        logger.info(f'found last users post {post_id} with status =' + str(api.LastJson.get('status', '')))
+                        logger.info(f'found last users {user} post {post_id} with status =' + str(api.LastJson.get('status', '')))
                         api.getMediaLikers(post_id)
                         likers_handles = []
                         for i in api.LastJson['users']:
@@ -790,7 +785,7 @@ def check_engagement(bot, update, job_queue):
                         if insta_handle not in likers_handles:
                             likers_missing.append(user)
                         else:
-                            user_comments = getComments(post_id)
+                            user_comments = getComments(api, post_id)
                             if insta_handle not in user_comments:
                                 comment_missing.append(user)
                         for i in likers_missing:
@@ -911,12 +906,15 @@ def setup():
 if __name__ == '__main__':
     api1 = InstagramAPI(INSTA_USERNAME, INSTA_PASSWORD)
     api2 = InstagramAPI(INSTA_USERNAME2, INSTA_PASSWORD2)
+    api3 = InstagramAPI(INSTA_USERNAME3, INSTA_PASSWORD3)
     sleep(1)
     api1.login()
     sleep(1)
     api2.login()
     sleep(1)
-    apis = cycle([api1, api2])
+    api3.login()
+    sleep(1)
+    apis = cycle([api1, api2, api3])
 
     logger.info(f'Instagram account(s): ready')
 
