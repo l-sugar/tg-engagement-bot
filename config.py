@@ -13,6 +13,8 @@ INSTA_USERNAME = os.getenv('INSTA_USER')
 INSTA_PASSWORD = os.getenv('INSTA_PW')
 INSTA_USERNAME2 = os.getenv('INSTA_USER2')
 INSTA_PASSWORD2 = os.getenv('INSTA_PW2')
+INSTA_USERNAME3 = os.getenv('INSTA_USER3')
+INSTA_PASSWORD3 = os.getenv('INSTA_PW3')
 
 # TIMES
 ROUNDS_INTERVAL = 23 * 60 * 60  # interval between rounds, seconds
