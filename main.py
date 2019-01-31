@@ -906,6 +906,8 @@ def setup():
 
 
 if __name__ == '__main__':
+    logged_in = []
+
     api1 = InstagramAPI(INSTA_USERNAME, INSTA_PASSWORD)
     api2 = InstagramAPI(INSTA_USERNAME2, INSTA_PASSWORD2)
     api3 = InstagramAPI(INSTA_USERNAME3, INSTA_PASSWORD3)
@@ -913,19 +915,27 @@ if __name__ == '__main__':
     api5 = InstagramAPI(INSTA_USERNAME5, INSTA_PASSWORD5)
     api6 = InstagramAPI(INSTA_USERNAME6, INSTA_PASSWORD6)
     sleep(1)
-    api1.login()
+    if api1.login():
+        logged_in.append(api1)
     sleep(1)
-    api2.login()
+    if api2.login():
+        logged_in.append(api2)
     sleep(1)
-    api3.login()
+    if api3.login():
+        logged_in.append(api3)
     sleep(1)
-    api4.login()
+    if api4.login():
+        logged_in.append(api4)
     sleep(1)
-    api5.login()
+    if api5.login():
+        logged_in.append(api5)
     sleep(1)
-    api6.login()
+    if api6.login():
+        logged_in.append(api6)
     sleep(1)
-    apis = cycle([api1, api2, api3, api4, api5, api6])
+
+
+    apis = cycle(logged_in)
 
     logger.info(f'Instagram account(s): ready')
 
