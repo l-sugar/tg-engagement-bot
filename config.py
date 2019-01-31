@@ -15,20 +15,32 @@ INSTA_USERNAME2 = os.getenv('INSTA_USER2')
 INSTA_PASSWORD2 = os.getenv('INSTA_PW2')
 INSTA_USERNAME3 = os.getenv('INSTA_USER3')
 INSTA_PASSWORD3 = os.getenv('INSTA_PW3')
+INSTA_USERNAME4 = os.getenv('INSTA_USER4')
+INSTA_PASSWORD4 = os.getenv('INSTA_PW4')
+INSTA_USERNAME5 = os.getenv('INSTA_USER5')
+INSTA_PASSWORD5 = os.getenv('INSTA_PW5')
+INSTA_USERNAME6 = os.getenv('INSTA_USER6')
+INSTA_PASSWORD6 = os.getenv('INSTA_PW6')
+
+# SWITCH VARS
+fake_positive = True # If true, check & 45 & final response always positive
+testing_times = False # If true, testing times are activated
 
 # TIMES
-ROUNDS_INTERVAL = 23 * 60 * 60  # interval between rounds, seconds
-DROP_WINDOW = 30 * 60  # drop window before each round_start, seconds
-ROUND_TIME = 1 * 60 * 60  # round_start time, seconds
-DROP_ANNOUNCE = 1 * 60 * 60 # drop_announcement time, seconds
-DROP_ENDS_SOON = DROP_WINDOW * 5 // 6 # drop_alert time
+if testing_times:
+    ROUNDS_INTERVAL = 1 * 2 * 60  # interval between rounds, seconds TESTING
+    DROP_WINDOW = 1 * 60  # drop window before each round_start, seconds TESTING
+    ROUND_TIME = 1 * 0.1 * 60  # round_start time, seconds TESTING
+    DROP_ANNOUNCE = 0.5 * 60 # drop_announcement time, seconds TESTING
+    DROP_ENDS_SOON = DROP_WINDOW * 5 // 6 # drop_alert time TESTING
+else:
+    ROUNDS_INTERVAL = 23 * 60 * 60  # interval between rounds, seconds
+    DROP_WINDOW = 30 * 60  # drop window before each round_start, seconds
+    ROUND_TIME = 1 * 60 * 60  # round_start time, seconds
+    DROP_ANNOUNCE = 1 * 60 * 60 # drop_announcement time, seconds
+    DROP_ENDS_SOON = DROP_WINDOW * 5 // 6 # drop_alert time
 
-# TESTING TIMES
-# ROUNDS_INTERVAL = 1 * 2 * 60  # interval between rounds, seconds TESTING
-# DROP_WINDOW = 1 * 60  # drop window before each round_start, seconds TESTING
-# ROUND_TIME = 1 * 0.1 * 60  # round_start time, seconds TESTING
-# DROP_ANNOUNCE = 0.5 * 60 # drop_announcement time, seconds TESTING
-# DROP_ENDS_SOON = DROP_WINDOW * 5 // 6 # drop_alert time TESTING
+
 
 BAD_USER_BAN_TIME = 15 * 24 * 60 * 60 # user ban time after bad behavior
 # BAD_USER_BAN_TIME = 1 * 60 * 60 # user ban time after bad behavior TESTING

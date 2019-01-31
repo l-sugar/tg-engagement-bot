@@ -396,7 +396,8 @@ def check45(bot, job):
         lst = [x for x in get_bad_users(pidorases)]
         list_to_send = '\n'.join(lst)
         logger.info(f'{chat_id}: These users did not complete the requirements: {lst}')
-        bot.sendMessage(chat_id, texts.BAD_CONDITIONS + list_to_send)
+        if not fake_positive:
+            bot.sendMessage(chat_id, texts.BAD_CONDITIONS + list_to_send)
         for insta_handle in missing_engagements:
             missing_likes = missing_engagements.get(insta_handle, "")[0]
             missing_comments = missing_engagements.get(insta_handle, "")[1]
@@ -410,7 +411,7 @@ def final_check(bot, job):
     logger.warning(f'{chat_id}: Final check initiated')
 
     pidorases, missing_engagements = check_instagram(nicks)
-    if not pidorases:
+    if not pidorases or fake_positive:
         logger.info(f'{chat_id}: All users have engaged with each other')
         #bot.sendMessage(chat_id, texts.ROUND_SUCCESS)
     else:
@@ -813,8 +814,7 @@ def check_engagement(bot, update, job_queue):
 
                 logger.info(f'{chat_id}: {insta_handle} CHECK_RESULT: {output_list}')
 
-
-                if output_list:
+                if output_list and not fake_positive:
                     if len(output_list) > 1:
                         list_to_check = '\nwww.instagram.com/' + '\nwww.instagram.com/'.join(output_list)
                     else:
@@ -835,9 +835,11 @@ def check_engagement(bot, update, job_queue):
                 job_queue.run_once(delete_check_message, time_of_deletion, context=[chat_id, check_response.message_id], name='delete check response from bot')
 
             else:
+                time_of_deletion = datetime.now() + timedelta(seconds=150)
                 bot.delete_message(chat_id=update.message.chat_id, message_id=update.message.message_id)
                 logger.info(f'{chat_id}: deleted /check message from non-participating user')
-                bot.sendMessage(chat_id, 'The /check command is only available for participants of the drop')
+                not_participating = bot.sendMessage(chat_id, 'The /check command is only available for participants of the drop')
+                job_queue.run_once(delete_check_message, time_of_deletion, context=[chat_id, not_participating.message.message_id, user_id], name='delete not_participating check response from bot')
 
         else:
             logger.info(f'{chat_id}: deleted /check message from non-participating user')
@@ -907,6 +909,9 @@ if __name__ == '__main__':
     api1 = InstagramAPI(INSTA_USERNAME, INSTA_PASSWORD)
     api2 = InstagramAPI(INSTA_USERNAME2, INSTA_PASSWORD2)
     api3 = InstagramAPI(INSTA_USERNAME3, INSTA_PASSWORD3)
+    api4 = InstagramAPI(INSTA_USERNAME4, INSTA_PASSWORD4)
+    api5 = InstagramAPI(INSTA_USERNAME5, INSTA_PASSWORD5)
+    api6 = InstagramAPI(INSTA_USERNAME6, INSTA_PASSWORD6)
     sleep(1)
     api1.login()
     sleep(1)
@@ -914,7 +919,13 @@ if __name__ == '__main__':
     sleep(1)
     api3.login()
     sleep(1)
-    apis = cycle([api1, api2, api3])
+    api4.login()
+    sleep(1)
+    api5.login()
+    sleep(1)
+    api6.login()
+    sleep(1)
+    apis = cycle([api1, api2, api3, api4, api5, api6])
 
     logger.info(f'Instagram account(s): ready')
 
