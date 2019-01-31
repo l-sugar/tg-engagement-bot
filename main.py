@@ -937,7 +937,8 @@ if __name__ == '__main__':
 
     apis = cycle(logged_in)
 
-    logger.info(f'Instagram account(s): {logged_in} ready')
+    login_output = tuple(logged_in)
+    logger.info(f'Instagram account(s): {login_output} ready')
 
     # TODO если надо будет обновлять конфиг в лайве
     # wm = pyinotify.WatchManager()
