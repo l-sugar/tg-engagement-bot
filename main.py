@@ -937,7 +937,7 @@ if __name__ == '__main__':
 
     apis = cycle(logged_in)
 
-    login_output = tuple(logged_in)
+    login_output = str(logged_in)
     logger.info(f'Instagram account(s): {login_output} ready')
 
     # TODO если надо будет обновлять конфиг в лайве
