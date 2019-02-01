@@ -911,8 +911,8 @@ if __name__ == '__main__':
     api1 = InstagramAPI(INSTA_USERNAME, INSTA_PASSWORD)
     api2 = InstagramAPI(INSTA_USERNAME2, INSTA_PASSWORD2)
     api3 = InstagramAPI(INSTA_USERNAME3, INSTA_PASSWORD3)
-    api4 = InstagramAPI(INSTA_USERNAME4, INSTA_PASSWORD4)
-    api5 = InstagramAPI(INSTA_USERNAME5, INSTA_PASSWORD5)
+    # api4 = InstagramAPI(INSTA_USERNAME4, INSTA_PASSWORD4)
+    # api5 = InstagramAPI(INSTA_USERNAME5, INSTA_PASSWORD5)
     api6 = InstagramAPI(INSTA_USERNAME6, INSTA_PASSWORD6)
     sleep(1)
     if api1.login():
@@ -923,12 +923,12 @@ if __name__ == '__main__':
     sleep(1)
     if api3.login():
         logged_in.append(api3)
-    sleep(1)
-    if api4.login():
-        logged_in.append(api4)
-    sleep(1)
-    if api5.login():
-        logged_in.append(api5)
+    # sleep(1)
+    # if api4.login():
+    #     logged_in.append(api4)
+    # sleep(1)
+    # if api5.login():
+    #     logged_in.append(api5)
     sleep(1)
     if api6.login():
         logged_in.append(api6)
