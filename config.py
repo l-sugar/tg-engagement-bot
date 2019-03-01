@@ -19,8 +19,8 @@ INSTA_PASSWORD3 = os.getenv('INSTA_PW3')
 # INSTA_PASSWORD4 = os.getenv('INSTA_PW4')
 # INSTA_USERNAME5 = os.getenv('INSTA_USER5')
 # INSTA_PASSWORD5 = os.getenv('INSTA_PW5')
-INSTA_USERNAME6 = os.getenv('INSTA_USER6')
-INSTA_PASSWORD6 = os.getenv('INSTA_PW6')
+# INSTA_USERNAME6 = os.getenv('INSTA_USER6')
+# INSTA_PASSWORD6 = os.getenv('INSTA_PW6')
 
 # SWITCH VARS
 fake_positive = True # If true, check & 45 & final response always positive
@@ -33,12 +33,15 @@ if testing_times:
     ROUND_TIME = 1 * 0.1 * 60  # round_start time, seconds TESTING
     DROP_ANNOUNCE = 0.5 * 60 # drop_announcement time, seconds TESTING
     DROP_ENDS_SOON = DROP_WINDOW * 5 // 6 # drop_alert time TESTING
+    CHECK_RESPONSE_DELETION_TIME = 5 * 60
+
 else:
     ROUNDS_INTERVAL = 23 * 60 * 60  # interval between rounds, seconds
     DROP_WINDOW = 30 * 60  # drop window before each round_start, seconds
     ROUND_TIME = 1 * 60 * 60  # round_start time, seconds
     DROP_ANNOUNCE = 1 * 60 * 60 # drop_announcement time, seconds
     DROP_ENDS_SOON = DROP_WINDOW * 5 // 6 # drop_alert time
+    CHECK_RESPONSE_DELETION_TIME = 5 * 60
 
 
 

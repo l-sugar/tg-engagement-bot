@@ -830,12 +830,12 @@ def check_engagement(bot, update, job_queue):
 
                 check_response = bot.sendMessage(chat_id, check_message, reply_to_message_id=update.message.message_id, disable_web_page_preview=True)
 
-                time_of_deletion = datetime.now() + timedelta(seconds=150)
+                time_of_deletion = datetime.now() + timedelta(seconds=CHECK_RESPONSE_DELETION_TIME)
                 job_queue.run_once(delete_check_message, time_of_deletion, context=[chat_id, update.message.message_id, user_id], name='delete check message from user')
                 job_queue.run_once(delete_check_message, time_of_deletion, context=[chat_id, check_response.message_id], name='delete check response from bot')
 
             else:
-                time_of_deletion = datetime.now() + timedelta(seconds=150)
+                time_of_deletion = datetime.now() + timedelta(seconds=CHECK_RESPONSE_DELETION_TIME)
                 bot.delete_message(chat_id=update.message.chat_id, message_id=update.message.message_id)
                 logger.info(f'{chat_id}: deleted /check message from non-participating user')
                 not_participating = bot.sendMessage(chat_id, 'The /check command is only available for participants of the drop')
