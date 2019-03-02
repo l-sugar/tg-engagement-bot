@@ -24,7 +24,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 sleep_time = 3
-insta_user_pattern = re.compile('^^([hH]ttp)?s?(://)?([wW]ww.)?[iI]nstagram.com/[^(p/)](.*)/?$')
+insta_user_pattern = re.compile('([hH]ttp)?s?(://)?([wW]ww.)?[iI]nstagram.com/(?!p/).*/?')
 
 times = {}  # {group_tg_id: closest round_start start timestamp}
 
