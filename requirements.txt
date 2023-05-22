@@ -1,4 +1,4 @@
-requests==2.21.0
+requests==2.31.0
 python_telegram_bot==11.1.0
 InstagramAPI==1.0.2
 pyinotify==0.9.6
